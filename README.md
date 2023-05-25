@@ -13,15 +13,6 @@ Biocontainers
 |--wait-for-it.sh
 
 ```
-## Usage
-1. create docker image for RSEM
-```sh
-docker build -t biocontainer/rsem -f Dockerfiles/rsem
-```
-2. Create STAR index
-3. Create RSEM index
-
-
 ## Overall flow
 - All processes are cotroled in `docker-compose.yml`
 - `wait-for-it.sh` dominates the run order of containers written in  docker-compose 
@@ -37,3 +28,24 @@ BAM/SAM
 count data
 ```
 
+## Usage
+1. create docker image for RSEM
+```sh
+docker build -t biocontainer/rsem -f Dockerfiles/rsem
+```
+2. Create STAR index (refer to [this section](https://github.com/Thickstem/Biocontainer-pipeline/blob/master/Details.md#31-prepare-index) )
+3. Create RSEM index (refer to [this section](https://github.com/Thickstem/Biocontainer-pipeline/blob/master/Details.md#41-prepare-reference))
+4. Download SRR file which you want analyze
+5. Modify variables in `.env` 
+
+### All run
+```sh
+docker-compose -f docker-compose.yml up
+```
+### Each tool run
+- This repository has `docker-compose-XXX.yml` file for each bioinformatics tools
+	- XXX: fastq-dump,fastp,STAR,RSEM
+- Each tools can be run independently with below command
+```sh
+docker-compose -f docker-compose-XXX.yml up
+```
