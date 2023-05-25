@@ -1,0 +1,16 @@
+version: "3"
+services:
+  star:
+    image: quay.io/biocontainers/star:${VER_3}
+    container_name: star
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      STAR --runThreadN ${THREADS} \
+          --runMode genomeGenerate \
+          --genomeDir STARidx \
+          --genomeFastaFiles STARidx/${FASTA file name} \
+          --sjdbGTFfile STARidx/${GTF/GFF3 file name} \
+          ${STARidxopt}

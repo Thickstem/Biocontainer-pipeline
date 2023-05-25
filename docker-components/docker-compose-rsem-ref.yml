@@ -1,0 +1,14 @@
+services:
+  rsem-ref:
+    image: biocontainers/rsem
+    container_name: rsem
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      rsem-prepare-reference \
+            --gtf ${GTF file path} \
+					  -p ${THREADS} \
+					  FASTA_file_path \
+					  ref_name_prefix

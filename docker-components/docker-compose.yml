@@ -31,4 +31,20 @@ services:
     working_dir: /tmp/wk
     command: >
       bash -c "sh wait-for-it.sh output/${ID}/${ID}.html STAR --runThreadN  ${THREADS} --readFilesCommand gunzip -c --genomeDir STARidx --readFilesIn output/${ID}/${ID}_trim.fastq.gz  --outFileNamePrefix output/${ID}/${ID}. ${STARopt}"
+  
+  rsem:
+    image: biocontainers/rsem
+    container_name: rsem
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      rsem-calculate-expression \
+          --alignments \
+          --append-names \
+          -p ${THREAD} \
+          output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam \
+          ./STARidx/RSEM \
+          ${ID}
 
