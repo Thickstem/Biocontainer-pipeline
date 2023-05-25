@@ -1,0 +1,22 @@
+version: "3"
+services:
+  star:
+    image: biocontainers/rsem
+    container_name: rsem
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      rsem-calculate-expression \
+          --alignments \
+          --append-names \
+          -p 32 \
+          output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam \
+          ./STARidx/RSEM \
+          ${ID}
+        
+ 
+
+          
+      

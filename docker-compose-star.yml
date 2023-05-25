@@ -1,0 +1,20 @@
+version: "3"
+services:
+  star:
+    image: quay.io/biocontainers/star:${VER_3}
+    container_name: star
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      STAR --runThreadN ${THREADS} \
+           --genomeDir STARidx \
+           --readFilesIn output/${ID}/${ID}_trim.fastq.gz \
+           --readFilesCommand gunzip -c \
+           --quantMode TranscriptomeSAM \
+           --genomeLoad NoSharedMemory \
+           --outSAMtype BAM SortedByCoordinate \
+           --outFileNamePrefix output/${ID}/${ID}_trim. \
+           --outFilterMultimapNmax 1
+

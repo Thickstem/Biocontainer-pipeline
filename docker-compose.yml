@@ -1,0 +1,34 @@
+#env in .env file
+version: "3"
+services:
+  parallel-fastq:
+    image: quay.io/biocontainers/parallel-fastq-dump:${VER_1}
+    container_name: parallel-fastq
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      bash -c "parallel-fastq-dump --sra-id ./input/${ID} --threads ${THREADS} --gzip &&
+      mkdir -p output/${ID} &&
+      mv *.fastq.gz output/${ID}/"
+
+  fastp:
+    image: quay.io/biocontainers/fastp:${VER_2}
+    container_name: fastp
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: sh wait-for-it.sh output/${ID}/${ID}.fastq.gz fastp -w 16 -h output/${ID}/${ID}.html -j output/${ID}/${ID}.json -i output/${ID}/${ID}.fastq.gz  -o output/${ID}/${ID}_trim.fastq.gz 
+
+  star:
+    image: quay.io/biocontainers/star:${VER_3}
+    container_name: star
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      bash -c "sh wait-for-it.sh output/${ID}/${ID}.html STAR --runThreadN  ${THREADS} --readFilesCommand gunzip -c --genomeDir STARidx --readFilesIn output/${ID}/${ID}_trim.fastq.gz  --outFileNamePrefix output/${ID}/${ID}. ${STARopt}"
+
