@@ -1,6 +1,15 @@
 #env in .env file
 version: "3"
 services:
+  sra-toolkit:
+    image: ncbi/sra-tools:3.0.1
+    container-name: sra-prefetch
+    tty:true:
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: prefetch ${ID} -O ./input/
+
   parallel-fastq:
     image: quay.io/biocontainers/parallel-fastq-dump:${VER_1}
     container_name: parallel-fastq
@@ -9,9 +18,9 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      bash -c "parallel-fastq-dump --sra-id ./input/${ID} --threads ${THREADS} --gzip &&
+      sh wait-for-it.sh input/${ID} parallel-fastq-dump --sra-id ./input/${ID} --threads ${THREADS} --gzip &&
       mkdir -p output/${ID} &&
-      mv *.fastq.gz output/${ID}/"
+      mv *.fastq.gz output/${ID}/
 
   fastp:
     image: quay.io/biocontainers/fastp:${VER_2}
