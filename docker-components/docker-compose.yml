@@ -1,15 +1,6 @@
 #env in .env file
 version: "3"
 services:
-  sra-toolkit:
-    image: ncbi/sra-tools:3.0.1
-    container-name: sra-prefetch
-    tty:true:
-    volumes:
-      - ${DIR}:/tmp/wk
-    working_dir: /tmp/wk
-    command: prefetch ${ID} -O ./input/
-
   parallel-fastq:
     image: quay.io/biocontainers/parallel-fastq-dump:${VER_1}
     container_name: parallel-fastq
@@ -18,9 +9,9 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      sh wait-for-it.sh input/${ID} parallel-fastq-dump --sra-id ./input/${ID} --threads ${THREADS} --gzip &&
+      bash -c "parallel-fastq-dump --sra-id ./input/${ID}/${ID}.sra --threads ${THREADS} --gzip &&
       mkdir -p output/${ID} &&
-      mv *.fastq.gz output/${ID}/
+      mv *.fastq.gz output/${ID}/"
 
   fastp:
     image: quay.io/biocontainers/fastp:${VER_2}
@@ -39,7 +30,7 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      bash -c "sh wait-for-it.sh output/${ID}/${ID}.html STAR --runThreadN  ${THREADS} --readFilesCommand gunzip -c --genomeDir STARidx --readFilesIn output/${ID}/${ID}_trim.fastq.gz  --outFileNamePrefix output/${ID}/${ID}. ${STARopt}"
+      sh wait-for-it.sh output/${ID}/${ID}.html  STAR --runThreadN  ${THREADS} --readFilesCommand gunzip -c --genomeDir STARidx --readFilesIn output/${ID}/${ID}_trim.fastq.gz  --outFileNamePrefix output/${ID}/${ID}. ${STARopt} 
   
   rsem:
     image: biocontainers/rsem
@@ -49,12 +40,5 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      bash -c "sh wait-for-it.sh output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam" \
-      rsem-calculate-expression \
-          --alignments \
-          --append-names \
-          -p ${THREAD} \
-          output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam \
-          ./STARidx/RSEM \
-          ./output/${ID}/${ID}
-
+      bash -c "sh wait-for-it.sh output/${ID}/${ID}_trim.Log.final.out rsem-calculate-expression --alignments --no-bam-output -p ${THREADS} output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam ./STARidx/RSEM ${ID} &&
+        mv ${ID}* output/${ID}/"

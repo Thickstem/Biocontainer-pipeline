@@ -8,6 +8,6 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      bash -c "parallel-fastq-dump --sra-id ./input/${ID} --threads ${THREADS} --gzip &&
-      mkdir -p output/${ID} &&
+      bash -c "parallel-fastq-dump --sra-id ./input/${ID}/${ID}.sra --threads ${THREADS} --gzip && 
+      mkdir -p output/${ID} && 
       mv *.fastq.gz output/${ID}/"

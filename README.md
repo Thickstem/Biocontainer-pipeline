@@ -44,7 +44,7 @@ docker-compose -f docker-compose.yml up
 ```
 ### Each tool run
 - This repository has `docker-compose-XXX.yml` file for each bioinformatics tools
-	- XXX: fastq-dump,fastp,STAR,RSEM
+	- XXX: sratoolkit,fastq-dump,fastp,STAR,RSEM
 - Each tools can be run independently with below command
 ```sh
 docker-compose -f docker-compose-XXX.yml up

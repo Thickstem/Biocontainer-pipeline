@@ -7,4 +7,5 @@ services:
     volumes:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
-    command: sh wait-for-it.sh output/${ID}/${ID}.fastq.gz fastp -w 16 -h output/${ID}/${ID}.html -j output/${ID}/${ID}.json -i output/${ID}/${ID}.fastq.gz  -o output/${ID}/${ID}_trim.fastq.gz 
+    command: >
+      fastp -w 16 -h output/${ID}/${ID}.html -j output/${ID}/${ID}.json -i output/${ID}/${ID}.fastq.gz  -o output/${ID}/${ID}_trim.fastq.gz 

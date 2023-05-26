@@ -8,13 +8,8 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      rsem-calculate-expression \
-          --alignments \
-          --append-names \
-          -p 32 \
-          output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam \
-          ./STARidx/RSEM \
-          ${ID}
+      bash -c "rsem-calculate-expression --alignments --no-bam-output -p ${THREADS} output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam ./STARidx/RSEM ${ID} &&
+        mv ${ID}* output/${ID}/ "
         
  
 
