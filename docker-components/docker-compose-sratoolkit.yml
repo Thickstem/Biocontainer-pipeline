@@ -1,0 +1,11 @@
+version: "3"
+services:
+  sra-toolkit:
+    image: ncbi/sra-tools:3.0.1
+    container-name: sra-prefetch
+    tty:true:
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: prefetch ${ID} -O ./input/
+
