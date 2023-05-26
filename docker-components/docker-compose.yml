@@ -40,11 +40,12 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
+      bash -c "sh wait-for-it.sh output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam" \
       rsem-calculate-expression \
           --alignments \
           --append-names \
           -p ${THREAD} \
           output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam \
           ./STARidx/RSEM \
-          ${ID}
+          ./output/${ID}/${ID}
 

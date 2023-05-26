@@ -1,0 +1,13 @@
+version: "3"
+services:
+  parallel-fastq:
+    image: quay.io/biocontainers/parallel-fastq-dump:${VER_1}
+    container_name: parallel-fastq
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: >
+      bash -c "parallel-fastq-dump --sra-id ./input/${ID} --threads ${THREADS} --gzip &&
+      mkdir -p output/${ID} &&
+      mv *.fastq.gz output/${ID}/"

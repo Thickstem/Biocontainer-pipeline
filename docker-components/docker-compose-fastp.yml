@@ -1,0 +1,10 @@
+version: "3"
+services:
+  fastp:
+    image: quay.io/biocontainers/fastp:${VER_2}
+    container_name: fastp
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: sh wait-for-it.sh output/${ID}/${ID}.fastq.gz fastp -w 16 -h output/${ID}/${ID}.html -j output/${ID}/${ID}.json -i output/${ID}/${ID}.fastq.gz  -o output/${ID}/${ID}_trim.fastq.gz 
