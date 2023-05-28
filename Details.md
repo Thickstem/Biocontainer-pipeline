@@ -1,7 +1,5 @@
 ## 1.fastq-dump
 - Create FASTQ file from SRR file.
-- SRR file have to be dowloaded and put to `./input` before run.
-	- SRR can't download directry with fastq-dump because of permission deny to NCBI.
 - This command is for single-end. Modify options when running for pair-end.
 ### Command
 ```sh

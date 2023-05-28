@@ -8,8 +8,9 @@ Biocontainers
 |--input
 |--output
 |--STARidx
-|--.env
-|--docker-compose.yml
+|--docker-components
+|		|- docker-compose-XXX.yml
+|		|-.env
 |--wait-for-it.sh
 
 ```
@@ -35,17 +36,16 @@ docker build -t biocontainer/rsem -f Dockerfiles/rsem
 ```
 2. Create STAR index (refer to [this section](https://github.com/Thickstem/Biocontainer-pipeline/blob/master/Details.md#31-prepare-index) )
 3. Create RSEM index (refer to [this section](https://github.com/Thickstem/Biocontainer-pipeline/blob/master/Details.md#41-prepare-reference))
-4. Download SRR file which you want analyze
-5. Modify variables in `.env` 
+4. Modify variables in `.env` 
 
 ### All run
 ```sh
-docker-compose -f docker-compose.yml up
+make all
 ```
 ### Each tool run
 - This repository has `docker-compose-XXX.yml` file for each bioinformatics tools
 	- XXX: sratoolkit,fastq-dump,fastp,STAR,RSEM
 - Each tools can be run independently with below command
 ```sh
-docker-compose -f docker-compose-XXX.yml up
+make ${TOOL_NAME}
 ```
