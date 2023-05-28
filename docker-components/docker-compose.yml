@@ -1,6 +1,15 @@
 #env in .env file
 version: "3"
 services:
+  sra-toolkit:
+    image: ncbi/sra-tools:3.0.1
+    container_name: sra-prefetch
+    tty: true
+    volumes:
+      - ${DIR}:/tmp/wk
+    working_dir: /tmp/wk
+    command: prefetch ${ID} -O ./input/
+  
   parallel-fastq:
     image: quay.io/biocontainers/parallel-fastq-dump:${VER_1}
     container_name: parallel-fastq
@@ -9,7 +18,7 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      bash -c "parallel-fastq-dump --sra-id ./input/${ID}/${ID}.sra --threads ${THREADS} --gzip &&
+      bash -c "sh wait-for-it.sh input/${ID}/${ID}.sra parallel-fastq-dump --sra-id ./input/${ID}/${ID}.sra --threads ${THREADS} --gzip &&
       mkdir -p output/${ID} &&
       mv *.fastq.gz output/${ID}/"
 
@@ -30,7 +39,15 @@ services:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      sh wait-for-it.sh output/${ID}/${ID}.html  STAR --runThreadN  ${THREADS} --readFilesCommand gunzip -c --genomeDir STARidx --readFilesIn output/${ID}/${ID}_trim.fastq.gz  --outFileNamePrefix output/${ID}/${ID}. ${STARopt} 
+      sh wait-for-it.sh output/${ID}/${ID}.html  STAR  --runThreadN ${THREADS} \
+           --genomeDir STARidx \
+           --readFilesIn output/${ID}/${ID}_trim.fastq.gz \
+           --readFilesCommand gunzip -c \
+           --quantMode TranscriptomeSAM \
+           --genomeLoad NoSharedMemory \
+           --outSAMtype BAM SortedByCoordinate \
+           --outFileNamePrefix output/${ID}/${ID}_trim. \
+           --outFilterMultimapNmax 1
   
   rsem:
     image: biocontainers/rsem
