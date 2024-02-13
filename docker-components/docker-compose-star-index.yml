@@ -7,10 +7,10 @@ services:
     volumes:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
+    user: '1001:1001'
     command: >
       STAR --runThreadN ${THREADS} \
-          --runMode genomeGenerate \
-          --genomeDir STARidx \
-          --genomeFastaFiles STARidx/${FASTA file name} \
-          --sjdbGTFfile STARidx/${GTF/GFF3 file name} \
-          ${STARidxopt}
+           --runMode genomeGenerate \
+           --genomeDir ./refs/index/STAR_mRNAlncRNA \
+           --genomeFastaFiles ./refs/mRNA.lncRNA.fa \
+           --genomeSAindexNbases 12 \

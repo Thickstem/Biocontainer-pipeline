@@ -7,5 +7,6 @@ services:
     volumes:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
+    user: '1001:1001'
     command: prefetch ${ID} -O ./input/
 

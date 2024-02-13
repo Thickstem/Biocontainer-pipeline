@@ -7,10 +7,7 @@ services:
     volumes:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
+    user: "1001:1001"
     command: >
-      bash -c "rsem-calculate-expression --alignments --no-bam-output -p ${THREADS} output/${ID}/${ID}_trim.Aligned.toTranscriptome.out.bam ./STARidx/RSEM ${ID} &&
+      bash -c "rsem-calculate-expression --alignments --no-bam-output -p ${THREADS} ./output/${ID}/${ID}_mapped_mod.sam ./refs/index/mRNA.lncRNA ${ID} &&
         mv ${ID}* output/${ID}/ "
-        
- 
-
-        

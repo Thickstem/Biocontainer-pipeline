@@ -1,14 +1,10 @@
 services:
   rsem-ref:
     image: biocontainers/rsem
-    container_name: rsem
+    container_name: rsem-ref
     tty: true
     volumes:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
     command: >
-      rsem-prepare-reference \
-            --gtf ${GTF file path} \
-					  -p ${THREADS} \
-					  FASTA_file_path \
-					  ref_name_prefix
+      rsem-prepare-reference  --num-threads 32 --gtf ./refs/gencode.v45.annotation.gtf ./refs/gencode.v45.pc_transcripts.fa ./refs/index/gencode.v45

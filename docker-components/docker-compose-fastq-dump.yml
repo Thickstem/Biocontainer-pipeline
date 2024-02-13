@@ -7,6 +7,7 @@ services:
     volumes:
       - ${DIR}:/tmp/wk
     working_dir: /tmp/wk
+    user: "${UID}:${UID}"
     command: >
       bash -c "parallel-fastq-dump --sra-id ./input/${ID}/${ID}.sra --threads ${THREADS} --gzip && 
       mkdir -p output/${ID} && 
